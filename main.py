@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 
 from model import MathQuery
 
@@ -25,3 +25,11 @@ async def read_modulo(mathQuery: MathQuery):
         return {"query": mathQuery, "result": mathQuery.a%mathQuery.b}
     except Exception as e:
         return {"query": mathQuery, "error": str(e)}
+
+
+def generate_password(username: str):
+    return username[::-1]
+
+@app.post("/login")
+async def login(username: str = Form(...), password: str = Form(...)):
+    return {"authorized": generate_password(username) == password}
